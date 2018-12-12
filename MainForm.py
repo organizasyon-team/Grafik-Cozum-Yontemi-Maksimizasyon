@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
-#from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog, QListWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -93,7 +92,10 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         #Events
-        self.btnKisitEkle.clicked.connect(self.kisitEkle)
+        self.btnKisitEkle.clicked.connect(self.addKisit)
+        self.btnCikar.clicked.connect(self.discardKisit)
+        #self.btnHesapla.clicked.connect(self.hesapla)  -->  Hesapla butonu click event
+        self.listKisitlar.currentItemChanged.connect(self.changeListItem)
 
         #Lists
         self.x1 = []
@@ -115,7 +117,7 @@ class Ui_MainWindow(object):
         self.btnHesapla.setText(_translate("MainWindow", "Hesapla"))
         self.btnCikar.setText(_translate("MainWindow", "Kısıtı Çıkar"))
 
-    def kisitEkle(self):
+    def addKisit(self):
         x1Value = self.sbx1.value()
         x2Value = self.sbx2.value()
         z1Value = self.sbz1.value()
@@ -124,7 +126,7 @@ class Ui_MainWindow(object):
         self.sbz1.setValue(0)
 
 
-        if(x1Value != 0 or x2Value != 0):
+        if(x1Value != 0 and x2Value != 0):
             self.x1.append(x1Value)
             self.x2.append(x2Value)
             self.z1.append(z1Value)
@@ -135,8 +137,12 @@ class Ui_MainWindow(object):
             item = str(x1Value) + "x1 + " + str(x2Value) + "x2 <= " + str(z1Value)
             self.listKisitlar.addItem(item)
 
+    def discardKisit(self):
+        indis = self.listKisitlar.currentItem()
+        print(indis)
 
-
+    def changeListItem(self):
+        self.btnCikar.setEnabled(True)
 
 if __name__ == "__main__":
     import sys
@@ -146,4 +152,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
