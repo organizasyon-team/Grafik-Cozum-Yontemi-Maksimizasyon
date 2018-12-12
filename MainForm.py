@@ -1,30 +1,18 @@
 # -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'MainForm.ui'
-#
-# Created by: PyQt5 UI code generator 5.10.1
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
+#from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog, QListWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(316, 131)
+        MainWindow.resize(342, 570)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.kisitAdet = QtWidgets.QSpinBox(self.centralwidget)
-        self.kisitAdet.setGeometry(QtCore.QRect(30, 80, 61, 26))
-        self.kisitAdet.setObjectName("kisitAdet")
-        self.label_8 = QtWidgets.QLabel(self.centralwidget)
-        self.label_8.setGeometry(QtCore.QRect(100, 80, 98, 29))
-        self.label_8.setObjectName("label_8")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(30, 10, 271, 61))
+        self.groupBox.setGeometry(QtCore.QRect(10, 10, 321, 91))
         self.groupBox.setObjectName("groupBox")
         self.layoutWidget = QtWidgets.QWidget(self.groupBox)
-        self.layoutWidget.setGeometry(QtCore.QRect(0, 28, 271, 31))
+        self.layoutWidget.setGeometry(QtCore.QRect(0, 28, 321, 61))
         self.layoutWidget.setObjectName("layoutWidget")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -45,8 +33,57 @@ class Ui_MainWindow(object):
         self.label_3.setObjectName("label_3")
         self.horizontalLayout_3.addWidget(self.label_3)
         self.btnKisitEkle = QtWidgets.QPushButton(self.centralwidget)
-        self.btnKisitEkle.setGeometry(QtCore.QRect(200, 80, 89, 25))
+        self.btnKisitEkle.setGeometry(QtCore.QRect(290, 110, 41, 31))
         self.btnKisitEkle.setObjectName("btnKisitEkle")
+        self.frame = QtWidgets.QFrame(self.centralwidget)
+        self.frame.setGeometry(QtCore.QRect(10, 110, 271, 30))
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.layoutWidget_2 = QtWidgets.QWidget(self.frame)
+        self.layoutWidget_2.setGeometry(QtCore.QRect(0, 0, 271, 28))
+        self.layoutWidget_2.setObjectName("layoutWidget_2")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget_2)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.sbx1 = QtWidgets.QSpinBox(self.layoutWidget_2)
+        self.sbx1.setObjectName("sbx1")
+        self.horizontalLayout.addWidget(self.sbx1)
+        self.lblx1 = QtWidgets.QLabel(self.layoutWidget_2)
+        self.lblx1.setObjectName("lblx1")
+        self.horizontalLayout.addWidget(self.lblx1)
+        self.sbx2 = QtWidgets.QSpinBox(self.layoutWidget_2)
+        self.sbx2.setMinimum(-999)
+        self.sbx2.setMaximum(999)
+        self.sbx2.setObjectName("sbx2")
+        self.horizontalLayout.addWidget(self.sbx2)
+        self.lblx2 = QtWidgets.QLabel(self.layoutWidget_2)
+        self.lblx2.setObjectName("lblx2")
+        self.horizontalLayout.addWidget(self.lblx2)
+        self.sbz1 = QtWidgets.QSpinBox(self.layoutWidget_2)
+        self.sbz1.setObjectName("sbz1")
+        self.horizontalLayout.addWidget(self.sbz1)
+        self.lblX1X2 = QtWidgets.QLabel(self.centralwidget)
+        self.lblX1X2.setGeometry(QtCore.QRect(10, 160, 121, 17))
+        self.lblX1X2.setObjectName("lblX1X2")
+        self.lblFonksiyon = QtWidgets.QLabel(self.centralwidget)
+        self.lblFonksiyon.setGeometry(QtCore.QRect(10, 140, 131, 16))
+        self.lblFonksiyon.setObjectName("lblFonksiyon")
+
+        self.listKisitlar = QtWidgets.QListWidget(self.centralwidget)
+        self.listKisitlar.setGeometry(QtCore.QRect(10, 180, 321, 311))
+        self.listKisitlar.setObjectName("listKisitlar")
+
+        self.btnHesapla = QtWidgets.QPushButton(self.centralwidget)
+        self.btnHesapla.setGeometry(QtCore.QRect(170, 500, 161, 40))
+        self.btnHesapla.setObjectName("btnHesapla")
+        self.btnHesapla.setEnabled(False)
+
+        self.btnCikar = QtWidgets.QPushButton(self.centralwidget)
+        self.btnCikar.setGeometry(QtCore.QRect(10, 500, 156, 41))
+        self.btnCikar.setObjectName("btnCikar")
+        self.btnCikar.setEnabled(False)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -55,22 +92,49 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-
         #Events
         self.btnKisitEkle.clicked.connect(self.kisitEkle)
+
+        #Lists
+        self.x1 = []
+        self.x2 = []
+        self.z1 = []
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Grafik Çözüm Programı (Maksimizasyon)"))
-        self.label_8.setText(_translate("MainWindow", "Adet Denklem"))
         self.groupBox.setTitle(_translate("MainWindow", "Amaç Fonksiyonu"))
         self.label.setText(_translate("MainWindow", "Zmax="))
-        self.label_2.setText(_translate("MainWindow", "X1 +"))
+        self.label_2.setText(_translate("MainWindow", "X1    +"))
         self.label_3.setText(_translate("MainWindow", "X2"))
         self.btnKisitEkle.setText(_translate("MainWindow", "Ekle"))
+        self.lblx1.setText(_translate("MainWindow", "X1 +"))
+        self.lblx2.setText(_translate("MainWindow", "X2 <="))
+        self.lblX1X2.setText(_translate("MainWindow", "X1 >= 0,  X2 >= 0"))
+        self.lblFonksiyon.setText(_translate("MainWindow", "Fonksiyon Kısıtları"))
+        self.btnHesapla.setText(_translate("MainWindow", "Hesapla"))
+        self.btnCikar.setText(_translate("MainWindow", "Kısıtı Çıkar"))
 
     def kisitEkle(self):
-        kisit_sayi = self.kisitAdet.value()
+        x1Value = self.sbx1.value()
+        x2Value = self.sbx2.value()
+        z1Value = self.sbz1.value()
+        self.sbx1.setValue(0)
+        self.sbx2.setValue(0)
+        self.sbz1.setValue(0)
+
+
+        if(x1Value != 0 or x2Value != 0):
+            self.x1.append(x1Value)
+            self.x2.append(x2Value)
+            self.z1.append(z1Value)
+
+            if(len(self.x1) >= 2):
+                self.btnHesapla.setEnabled(True)
+
+            item = str(x1Value) + "x1 + " + str(x2Value) + "x2 <= " + str(z1Value)
+            self.listKisitlar.addItem(item)
+
 
 
 
