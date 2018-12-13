@@ -47,6 +47,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.sbx1 = QtWidgets.QSpinBox(self.layoutWidget_2)
         self.sbx1.setObjectName("sbx1")
+        self.sbx1.setMinimum(-999)
+        self.sbx1.setMaximum(999)
         self.horizontalLayout.addWidget(self.sbx1)
         self.lblx1 = QtWidgets.QLabel(self.layoutWidget_2)
         self.lblx1.setObjectName("lblx1")
@@ -94,13 +96,15 @@ class Ui_MainWindow(object):
         #Events
         self.btnKisitEkle.clicked.connect(self.addKisit)
         self.btnCikar.clicked.connect(self.discardKisit)
-        #self.btnHesapla.clicked.connect(self.hesapla)  -->  Hesapla butonu click event
+        self.btnHesapla.clicked.connect(self.hesapla)
         self.listKisitlar.currentItemChanged.connect(self.changeListItem)
 
         #Lists
         self.x1 = []
         self.x2 = []
         self.z1 = []
+
+        self.lines = []
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -151,6 +155,37 @@ class Ui_MainWindow(object):
 
     def changeListItem(self):
         self.btnCikar.setEnabled(True)
+
+
+    def hesapla(self):
+        for i in range(0, len(self.x1)):
+            for j in range(i + 1, len(self.x1)):
+                L1 = self.line([0, self.z1[i] / self.x2[i]], [self.z1[i] / self.x1[i], 0])
+                L2 = self.line([0, self.z1[j] / self.x2[j]], [self.z1[j] / self.x1[j], 0])
+                R = self.intersection(L1, L2)
+                if R:
+                    print "Intersection detected:", R
+                else:
+                    print "No single intersection point detected"
+
+
+    def line(self, p1, p2):
+        A = (p1[1] - p2[1])
+        B = (p2[0] - p1[0])
+        C = (p1[0]*p2[1] - p2[0]*p1[1])
+        return A, B, -C
+
+    def intersection(self, L1, L2):
+        D  = L1[0] * L2[1] - L1[1] * L2[0]
+        Dx = L1[2] * L2[1] - L1[1] * L2[2]
+        Dy = L1[0] * L2[2] - L1[2] * L2[0]
+        if D != 0:
+            x = Dx / D
+            y = Dy / D
+            return x,y
+        else:
+            return False
+
 
 if __name__ == "__main__":
     import sys
