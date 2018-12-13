@@ -125,7 +125,6 @@ class Ui_MainWindow(object):
         self.sbx2.setValue(0)
         self.sbz1.setValue(0)
 
-
         if(x1Value != 0 and x2Value != 0):
             self.x1.append(x1Value)
             self.x2.append(x2Value)
@@ -134,12 +133,21 @@ class Ui_MainWindow(object):
             if(len(self.x1) >= 2):
                 self.btnHesapla.setEnabled(True)
 
-            item = str(x1Value) + "x1 + " + str(x2Value) + "x2 <= " + str(z1Value)
+            if(x2Value > 0):
+                item = str(x1Value) + "x1 + " + str(x2Value) + "x2 <= " + str(z1Value)
+            else:
+                item = str(x1Value) + "x1 " + str(x2Value) + "x2 <= " + str(z1Value)
             self.listKisitlar.addItem(item)
 
     def discardKisit(self):
-        indis = self.listKisitlar.currentItem()
-        print(indis)
+        listModel = self.listKisitlar.model()
+        index_num = self.listKisitlar.indexFromItem(self.listKisitlar.selectedItems()[0]).row()
+        print(index_num)
+        listModel.removeRow(index_num)
+
+        self.x1.remove(self.x1[index_num])
+        self.x2.remove(self.x2[index_num])
+        self.z1.remove(self.z1[index_num])
 
     def changeListItem(self):
         self.btnCikar.setEnabled(True)
