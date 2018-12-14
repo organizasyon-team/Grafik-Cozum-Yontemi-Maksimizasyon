@@ -105,8 +105,6 @@ class Ui_MainWindow(object):
         self.x2 = []
         self.z1 = []
 
-        self.lines = []
-
         #Doğruların Çarpışma Noktaları (x1, x2)
         self.cX1 = []
         self.cX2 = []
@@ -166,29 +164,30 @@ class Ui_MainWindow(object):
 
 
     def hesapla(self):
+        #Listelerdeki önceki değerleri sil
+        self.cValues[:] = []
+        self.cX1[:] = []
+        self.cX2[:] = []
         for i in range(0, len(self.x1)):
             for j in range(i + 1, len(self.x1)):
-                L1 = self.line([0, self.z1[i] / self.x2[i]], [self.z1[i] / self.x1[i], 0])
-                L2 = self.line([0, self.z1[j] / self.x2[j]], [self.z1[j] / self.x1[j], 0])
+                L1 = (self.x1[i], self.x2[i], self.z1[i])
+                L2 = (self.x1[j], self.x2[j], self.z1[j])
                 R = self.intersection(L1, L2)
+
                 if R:
                     self.cX1.append(R[0])
                     self.cX2.append(R[1])
 
+                    #Çakışan doğruların ortak çözümü ile x1 ve x2 değerlerinin bulunması
                     A = np.array([[self.x1[i], self.x2[i]], [self.x1[j], self.x2[j]]])
                     B = np.array([[self.z1[i]], [self.z1[j]]])
                     C = np.dot(np.linalg.inv(A),B)
+
+                    #Bulunan x1 ve x2 değerlerinin Zmaksda yerine yazılması
                     cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
                     self.cValues.append(cValue)
-                    #print(cValue[0])
+                    print(cValue[0])
                     
-
-
-    def line(self, p1, p2):
-        A = (p1[1] - p2[1])
-        B = (p2[0] - p1[0])
-        C = (p1[0]*p2[1] - p2[0]*p1[1])
-        return A, B, -C
 
     def intersection(self, L1, L2):
         D  = L1[0] * L2[1] - L1[1] * L2[0]
