@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
+import numpy as np
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -110,6 +111,9 @@ class Ui_MainWindow(object):
         self.cX1 = []
         self.cX2 = []
 
+        #Çakışma nokta değerleri
+        self.cValues = []
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Grafik Çözüm Programı (Maksimizasyon)"))
@@ -170,7 +174,13 @@ class Ui_MainWindow(object):
                 if R:
                     self.cX1.append(R[0])
                     self.cX2.append(R[1])
-                    #print ("Çakışma Noktası : ", R)
+
+                    A = np.array([[self.x1[i], self.x2[i]], [self.x1[j], self.x2[j]]])
+                    B = np.array([[self.z1[i]], [self.z1[j]]])
+                    C = np.dot(np.linalg.inv(A),B)
+                    cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
+                    self.cValues.append(cValue)
+                    #print(cValue[0])
                     
 
 
