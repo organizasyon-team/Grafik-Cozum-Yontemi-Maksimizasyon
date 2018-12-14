@@ -104,9 +104,7 @@ class Ui_MainWindow(object):
         self.x2 = []
         self.z1 = []
 
-        #Doğruların Çarpışma Noktaları (x1, x2)
-        self.cX1 = []
-        self.cX2 = []
+        self.lines = []
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -131,7 +129,7 @@ class Ui_MainWindow(object):
         self.sbx2.setValue(0)
         self.sbz1.setValue(0)
 
-        if(x1Value != 0 or x2Value != 0):
+        if(x1Value != 0 and x2Value != 0):
             self.x1.append(x1Value)
             self.x2.append(x2Value)
             self.z1.append(z1Value)
@@ -166,15 +164,10 @@ class Ui_MainWindow(object):
                 L2 = self.line([0, self.z1[j] / self.x2[j]], [self.z1[j] / self.x1[j], 0])
                 R = self.intersection(L1, L2)
                 if R:
-<<<<<<< HEAD
                     print ("Intersection detected:", R)
                 else:
                     print ("No single intersection point detected")
-=======
-                    self.cX1.append(R[0])
-                    self.cX2.append(R[1])
-                    print "Intersection detected : ", R
->>>>>>> 23fe2c9b048dd62ea0614b84b8064d1ec713f403
+                    
 
 
     def line(self, p1, p2):
