@@ -168,6 +168,7 @@ class Ui_MainWindow(object):
         self.cValues[:] = []
         self.cX1[:] = []
         self.cX2[:] = []
+        print(len(self.cValues))
         for i in range(0, len(self.x1)):
             for j in range(i + 1, len(self.x1)):
                 L1 = (self.x1[i], self.x2[i], self.z1[i])
@@ -175,6 +176,14 @@ class Ui_MainWindow(object):
                 R = self.intersection(L1, L2)
 
                 if R:
+                    degerBuyukmu = False
+                    for k in range(0, len(self.x2)):
+                        if(R[1] > self.x2[k]):
+                            degerBuyukmu = True
+                            break
+                    if(degerBuyukmu):
+                        continue
+                    
                     self.cX1.append(R[0])
                     self.cX2.append(R[1])
 
@@ -187,6 +196,8 @@ class Ui_MainWindow(object):
                     cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
                     self.cValues.append(cValue)
                     print(cValue[0])
+                    
+
                     
 
     def intersection(self, L1, L2):
