@@ -164,9 +164,9 @@ class Ui_MainWindow(object):
                 L2 = self.line([0, self.z1[j] / self.x2[j]], [self.z1[j] / self.x1[j], 0])
                 R = self.intersection(L1, L2)
                 if R:
-                    print "Intersection detected:", R
+                    print ("Intersection detected:", R)
                 else:
-                    print "No single intersection point detected"
+                    print ("No single intersection point detected")
 
 
     def line(self, p1, p2):
