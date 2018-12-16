@@ -3,6 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -95,26 +96,26 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        #Events
+        # Events
         self.btnKisitEkle.clicked.connect(self.addKisit)
         self.btnCikar.clicked.connect(self.discardKisit)
         self.btnHesapla.clicked.connect(self.hesapla)
         self.listKisitlar.currentItemChanged.connect(self.changeListItem)
 
-        #Lists
+        # Lists
         self.x1 = []
         self.x2 = []
         self.z1 = []
 
-        #GrafikList
+        # GrafikList
         self.gx1 = []
         self.gx2 = []
 
-        #Doğruların Çarpışma Noktaları (x1, x2)
+        # Doğruların Çarpışma Noktaları (x1, x2)
         self.cX1 = []
         self.cX2 = []
 
-        #Çakışma nokta değerleri
+        # Çakışma nokta değerleri
         self.cValues = []
 
     def retranslateUi(self, MainWindow):
@@ -140,20 +141,21 @@ class Ui_MainWindow(object):
         self.sbx2.setValue(0)
         self.sbz1.setValue(0)
 
-        if(x1Value != 0 or x2Value != 0):
+        if (x1Value != 0 or x2Value != 0):
             self.x1.append(x1Value)
             self.x2.append(x2Value)
             self.z1.append(z1Value)
-            
 
-            self.gx1.append(z1Value / x1Value)
+            if(x1Value == 0):
+                self.gx1.append(0)
+            else:
+                self.gx1.append(z1Value / x1Value)
             self.gx2.append(z1Value / x2Value)
-            
 
-            if(len(self.x1) >= 2):
+            if (len(self.x1) >= 2):
                 self.btnHesapla.setEnabled(True)
 
-            if(x2Value > 0):
+            if (x2Value > 0):
                 item = str(x1Value) + "x1 + " + str(x2Value) + "x2 <= " + str(z1Value)
             else:
                 item = str(x1Value) + "x1 " + str(x2Value) + "x2 <= " + str(z1Value)
@@ -162,19 +164,19 @@ class Ui_MainWindow(object):
     def discardKisit(self):
         listModel = self.listKisitlar.model()
         index_num = self.listKisitlar.indexFromItem(self.listKisitlar.selectedItems()[0]).row()
-        print(index_num)
         listModel.removeRow(index_num)
 
         self.x1.remove(self.x1[index_num])
         self.x2.remove(self.x2[index_num])
         self.z1.remove(self.z1[index_num])
+        self.gx1.remove(self.gx1[index_num])
+        self.gx2.remove(self.gx2[index_num])
 
     def changeListItem(self):
         self.btnCikar.setEnabled(True)
 
-
     def hesapla(self):
-        #Listelerdeki önceki değerleri sil
+        # Listelerdeki önceki değerleri sil
         self.cValues[:] = []
         self.cX1[:] = []
         self.cX2[:] = []
@@ -189,46 +191,50 @@ class Ui_MainWindow(object):
                     self.cX1.append(R[0])
                     self.cX2.append(R[1])
 
-                    #Çakışan doğruların ortak çözümü ile x1 ve x2 değerlerinin bulunması
+                    # Çakışan doğruların ortak çözümü ile x1 ve x2 değerlerinin bulunması
                     A = np.array([[self.x1[i], self.x2[i]], [self.x1[j], self.x2[j]]])
                     B = np.array([[self.z1[i]], [self.z1[j]]])
-                    C = np.dot(np.linalg.inv(A),B)
+                    C = np.dot(np.linalg.inv(A), B)
 
-                    #Bulunan x1 ve x2 değerlerinin Zmaksda yerine yazılması
+                    # Bulunan x1 ve x2 değerlerinin Zmaksda yerine yazılması
                     cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
                     self.cValues.append(cValue)
                     print(cValue[0])
-        
-        
+
         for i in range(0, len(self.gx1)):
-            if self.gx1[i]<0 or self.gx2[i]<0:
-                plt.plot([5, self.gx1[i]], [self.gx2[i] + 5, 0], label=str(i+1) + ". denklem")
+            if self.gx1[i] == 0:
+                #plt.plot([self.gx2[i], 0],[self.gx2[i], 5], label=str(i + 1) + ". denklem")
+                plt.plot([self.gx2[i]+5, self.gx1[i]],[self.gx2[i], self.gx2[i]], label=str(i + 1) + ". denklem")
+            elif self.gx1[i] < 0 or self.gx2[i] < 0:
+                plt.plot([5, self.gx1[i]], [self.gx2[i] + 5, 0], label=str(i + 1) + ". denklem")
             else:
                 plt.plot([0, self.gx1[i]], [self.gx2[i], 0], label=str(i + 1) + ". denklem")
+
+        plt.scatter(self.cX1,self.cX2, s=100, color='k', label="Kesisim Noktalari")
 
         plt.title("Maksimizasyon Grafigi")
         plt.xlabel("X1")
         plt.ylabel("X2")
 
-        plt.legend() #show the label
+        plt.legend()  # show the label
 
-        plt.show() #run the graphic
-                    
+        plt.show()  # run the graphic
 
     def intersection(self, L1, L2):
-        D  = L1[0] * L2[1] - L1[1] * L2[0]
+        D = L1[0] * L2[1] - L1[1] * L2[0]
         Dx = L1[2] * L2[1] - L1[1] * L2[2]
         Dy = L1[0] * L2[2] - L1[2] * L2[0]
         if D != 0:
             x = Dx / D
             y = Dy / D
-            return x,y
+            return x, y
         else:
             return False
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
