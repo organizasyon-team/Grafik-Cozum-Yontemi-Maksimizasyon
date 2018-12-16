@@ -105,6 +105,10 @@ class Ui_MainWindow(object):
         self.x2 = []
         self.z1 = []
 
+        #GrafikList
+        self.gx1 = []
+        self.gx2 = []
+
         #Doğruların Çarpışma Noktaları (x1, x2)
         self.cX1 = []
         self.cX2 = []
@@ -139,6 +143,9 @@ class Ui_MainWindow(object):
             self.x1.append(x1Value)
             self.x2.append(x2Value)
             self.z1.append(z1Value)
+            
+            self.gx1.append(z1Value / x2Value)
+            self.gx2.append(z1Value / x1Value)
 
             if(len(self.x1) >= 2):
                 self.btnHesapla.setEnabled(True)
@@ -176,14 +183,6 @@ class Ui_MainWindow(object):
                 R = self.intersection(L1, L2)
 
                 if R:
-                    degerBuyukmu = False
-                    for k in range(0, len(self.x2)):
-                        if(R[1] > self.x2[k]):
-                            degerBuyukmu = True
-                            break
-                    if(degerBuyukmu):
-                        continue
-                    
                     self.cX1.append(R[0])
                     self.cX2.append(R[1])
 
