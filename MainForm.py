@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -144,8 +145,10 @@ class Ui_MainWindow(object):
             self.x2.append(x2Value)
             self.z1.append(z1Value)
             
-            self.gx1.append(z1Value / x2Value)
-            self.gx2.append(z1Value / x1Value)
+
+            self.gx1.append(z1Value / x1Value)
+            self.gx2.append(z1Value / x2Value)
+            
 
             if(len(self.x1) >= 2):
                 self.btnHesapla.setEnabled(True)
@@ -195,8 +198,21 @@ class Ui_MainWindow(object):
                     cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
                     self.cValues.append(cValue)
                     print(cValue[0])
-                    
+        
+        
+        for i in range(0, len(self.gx1)):
+            if self.gx1[i]<0 or self.gx2[i]<0:
+                plt.plot([5, self.gx1[i]], [self.gx2[i] + 5, 0], label=str(i+1) + ". denklem")
+            else:
+                plt.plot([0, self.gx1[i]], [self.gx2[i], 0], label=str(i + 1) + ". denklem")
 
+        plt.title("Maksimizasyon Grafigi")
+        plt.xlabel("X1")
+        plt.ylabel("X2")
+
+        plt.legend() #show the label
+
+        plt.show() #run the graphic
                     
 
     def intersection(self, L1, L2):
