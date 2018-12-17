@@ -180,28 +180,35 @@ class Ui_MainWindow(object):
         self.cValues[:] = []
         self.cX1[:] = []
         self.cX2[:] = []
+        enBuyukX = 0
+        enBuyukY = 0
+        for i in range(0, len(self.x1)):
+            if enBuyukX < self.x1[i]:
+                enBuyukX = self.x1[i]
+            if enBuyukY < self.x2[i]:
+                enBuyukY = self.x2[i]
+
+        
         for i in range(0, len(self.x1) - 1):
             for j in range(i + 1, len(self.x1)):
-                L1 = (self.x1[i], self.x2[i], self.z1[i])
-                L2 = (self.x1[j], self.x2[j], self.z1[j])
-                R = self.intersection(L1, L2)
+                # Çakışan doğruların ortak çözümü ile x1 ve x2 değerlerinin bulunması
+                A = np.array([[self.x1[i], self.x2[i]], [self.x1[j], self.x2[j]]])
+                B = np.array([[self.z1[i]], [self.z1[j]]])
+                C = np.dot(np.linalg.inv(A), B)
 
-                if R:
+                if C[0] > 0 or C[1] > 0:
                     isOptimum = False
-                    for j in range(0, len(self.z1)):
-                        sonuc = R[0] * self.x1[j] + R[1] * self.x2[j]
+                    for j in range(0, len(self.x1)):
+                        sonuc = C[0] * self.x1[j] + C[1] * self.x2[j]
                         if(sonuc <= self.z1[j]):
                             isOptimum = True
                         else:
                             isOptimum = False
+                            break
 
                     if(isOptimum):
-                        self.cX1.append(R[0])
-                        self.cX2.append(R[1])
-                        # Çakışan doğruların ortak çözümü ile x1 ve x2 değerlerinin bulunması
-                        A = np.array([[self.x1[i], self.x2[i]], [self.x1[j], self.x2[j]]])
-                        B = np.array([[self.z1[i]], [self.z1[j]]])
-                        C = np.dot(np.linalg.inv(A), B)
+                        self.cX1.append(C[0])
+                        self.cX2.append(C[1])
 
                         # Bulunan x1 ve x2 değerlerinin Zmaksda yerine yazılması
                         cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
@@ -228,18 +235,6 @@ class Ui_MainWindow(object):
         plt.legend()  # show the label
 
         plt.show()  # run the graphic
-
-    def intersection(self, L1, L2):
-        D = L1[0] * L2[1] - L1[1] * L2[0]
-        Dx = L1[2] * L2[1] - L1[1] * L2[2]
-        Dy = L1[0] * L2[2] - L1[2] * L2[0]
-        if D != 0:
-            x = Dx / D
-            y = Dy / D
-            return x, y
-        else:
-            return False
-        
 
 
 if __name__ == "__main__":
