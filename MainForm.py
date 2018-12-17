@@ -2,6 +2,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import style
 
 
 class Ui_MainWindow(object):
@@ -180,14 +181,6 @@ class Ui_MainWindow(object):
         self.cValues[:] = []
         self.cX1[:] = []
         self.cX2[:] = []
-        enBuyukX = 0
-        enBuyukY = 0
-        for i in range(0, len(self.x1)):
-            if enBuyukX < self.x1[i]:
-                enBuyukX = self.x1[i]
-            if enBuyukY < self.x2[i]:
-                enBuyukY = self.x2[i]
-
         
         for i in range(0, len(self.x1) - 1):
             for j in range(i + 1, len(self.x1)):
@@ -214,18 +207,42 @@ class Ui_MainWindow(object):
                         cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
                         self.cValues.append(cValue[0])
                         print(cValue[0])
-
+        enBuyukX = 0
+        enBuyukY = 0
+        enKucukX = 999
+        enKucukY = 999
+        for i in range(0, len(self.gx1)):
+            if enBuyukX < self.gx1[i]:
+                enBuyukX = self.gx1[i]
+            if enBuyukY < self.gx2[i]:
+                enBuyukY = self.gx2[i]
+            if enKucukX > self.gx1[i] and self.gx1[i]>0:
+                enKucukX = self.gx1[i]
+            if enKucukY > self.gx2[i] and self.gx2[i]>0:
+                enKucukY = self.gx2[i]
+        style.use('ggplot')
+        plt.plot([0,0],[enBuyukX,0], color = 'k' ,lw = 3)
+        ax = plt.axes()
+        ax.arrow(0,0,enBuyukX,0, head_width = 0.2, head_length = 0.2, fc = 'k', ec = 'k')
+        plt.plot([0,enBuyukY],[0,0], color = 'k' ,lw = 3)
+        ax.arrow(0,0,0,enBuyukY, head_width = 0.2, head_length = 0.2, fc = 'k', ec = 'k')
 
         for i in range(0, len(self.gx1)):
             if self.gx1[i] == 0:
-                plt.plot([self.gx2[i] + 5, self.gx1[i]],[self.gx2[i], self.gx2[i]], label=str(i + 1) + ". denklem")
+                plt.plot([self.gx2[i] + 5, self.gx1[i]],[self.gx2[i], self.gx2[i]], label=str(self.x1[i]) + "x1 + " + str(self.x2[i]) + "x2 <= " + str(self.z1[i]))
             elif self.gx1[i] < 0 or self.gx2[i] < 0:
-                plt.plot([5, self.gx1[i]], [self.gx2[i] + 5, 0], label=str(i + 1) + ". denklem")
+                plt.plot([5, self.gx1[i]], [self.gx2[i] + 5, 0], label=str(self.x1[i]) + "x1 + " + str(self.x2[i]) + "x2 <= " + str(self.z1[i]))
             else:
-                plt.plot([0, self.gx1[i]], [self.gx2[i], 0], label=str(i + 1) + ". denklem")
+                plt.plot([0, self.gx1[i]], [self.gx2[i], 0], label=str(self.x1[i]) + "x1 + " + str(self.x2[i]) + "x2 <= " + str(self.z1[i]))
         print("Cakisma Sayi  : " + str(len(self.cX1)))
+
+        plt.scatter([0,0],[enKucukY,0], s=100)
+        plt.scatter([0, enKucukX], [0, 0], s=100)
         
-        plt.scatter(self.cX1,self.cX2, s=100, color = 'r' ,label="cakisma")
+        for i in range(0, len(self.cX1)):
+            plt.scatter(self.cX1[i],self.cX2[i], s=100,label=chr(65+i) + " : " + str(self.cValues[i]))
+
+        
             
         
         plt.title("Maksimizasyon Grafigi")
