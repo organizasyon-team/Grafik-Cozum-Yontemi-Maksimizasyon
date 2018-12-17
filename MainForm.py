@@ -239,11 +239,18 @@ class Ui_MainWindow(object):
         plt.scatter([0,0],[enKucukY,0], s=100)
         plt.scatter([0, enKucukX], [0, 0], s=100)
         
-        for i in range(0, len(self.cX1)):
+        tX1 = []
+        tX2 = []
+        tX1.append(0)
+        tX2.append(enKucukY)
+        for i in range(len(self.cX1) - 1, -1,-1):
             plt.scatter(self.cX1[i],self.cX2[i], s=100,label=chr(65+i) + " : " + str(self.cValues[i]))
-
-        
+            tX1.append(self.cX1[i])
+            tX2.append(self.cX2[i])
             
+        tX1.append(enKucukX)
+        tX2.append(0)
+        plt.stackplot(tX1, tX2)
         
         plt.title("Maksimizasyon Grafigi")
         plt.xlabel("X1")
