@@ -180,38 +180,47 @@ class Ui_MainWindow(object):
         self.cValues[:] = []
         self.cX1[:] = []
         self.cX2[:] = []
-        print(len(self.cValues))
-        for i in range(0, len(self.x1)):
+        for i in range(0, len(self.x1) - 1):
             for j in range(i + 1, len(self.x1)):
                 L1 = (self.x1[i], self.x2[i], self.z1[i])
                 L2 = (self.x1[j], self.x2[j], self.z1[j])
                 R = self.intersection(L1, L2)
 
                 if R:
-                    self.cX1.append(R[0])
-                    self.cX2.append(R[1])
+                    isOptimum = False
+                    for j in range(0, len(self.z1)):
+                        sonuc = R[0] * self.x1[j] + R[1] * self.x2[j]
+                        if(sonuc <= self.z1[j]):
+                            isOptimum = True
+                        else:
+                            isOptimum = False
 
-                    # Çakışan doğruların ortak çözümü ile x1 ve x2 değerlerinin bulunması
-                    A = np.array([[self.x1[i], self.x2[i]], [self.x1[j], self.x2[j]]])
-                    B = np.array([[self.z1[i]], [self.z1[j]]])
-                    C = np.dot(np.linalg.inv(A), B)
+                    if(isOptimum):
+                        self.cX1.append(R[0])
+                        self.cX2.append(R[1])
+                        # Çakışan doğruların ortak çözümü ile x1 ve x2 değerlerinin bulunması
+                        A = np.array([[self.x1[i], self.x2[i]], [self.x1[j], self.x2[j]]])
+                        B = np.array([[self.z1[i]], [self.z1[j]]])
+                        C = np.dot(np.linalg.inv(A), B)
 
-                    # Bulunan x1 ve x2 değerlerinin Zmaksda yerine yazılması
-                    cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
-                    self.cValues.append(cValue)
-                    print(cValue[0])
+                        # Bulunan x1 ve x2 değerlerinin Zmaksda yerine yazılması
+                        cValue = self.zmaksX1.value() * C[0] + self.zmaksX2.value() * C[1]
+                        self.cValues.append(cValue[0])
+                        print(cValue[0])
+
 
         for i in range(0, len(self.gx1)):
             if self.gx1[i] == 0:
-                #plt.plot([self.gx2[i], 0],[self.gx2[i], 5], label=str(i + 1) + ". denklem")
-                plt.plot([self.gx2[i]+5, self.gx1[i]],[self.gx2[i], self.gx2[i]], label=str(i + 1) + ". denklem")
+                plt.plot([self.gx2[i] + 5, self.gx1[i]],[self.gx2[i], self.gx2[i]], label=str(i + 1) + ". denklem")
             elif self.gx1[i] < 0 or self.gx2[i] < 0:
                 plt.plot([5, self.gx1[i]], [self.gx2[i] + 5, 0], label=str(i + 1) + ". denklem")
             else:
                 plt.plot([0, self.gx1[i]], [self.gx2[i], 0], label=str(i + 1) + ". denklem")
-
-        plt.scatter(self.cX1,self.cX2, s=100, color='k', label="Kesisim Noktalari")
-
+        print("Cakisma Sayi  : " + str(len(self.cX1)))
+        
+        plt.scatter(self.cX1,self.cX2, s=100, color = 'r' ,label="cakisma")
+            
+        
         plt.title("Maksimizasyon Grafigi")
         plt.xlabel("X1")
         plt.ylabel("X2")
@@ -230,6 +239,7 @@ class Ui_MainWindow(object):
             return x, y
         else:
             return False
+        
 
 
 if __name__ == "__main__":
